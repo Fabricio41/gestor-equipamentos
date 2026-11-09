@@ -1,0 +1,556 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Gestor Equipamentos | Sistema de Gestão</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ================================== -->
+    <!-- CABEÇALHO -->
+    <!-- ================================== -->
+
+    <header>
+        <div class="container cabecalho">
+
+            <div>
+                <h1>Gestor Equipamentos</h1>
+                <p>Controle inteligente de patrimônio e máquinas</p>
+            </div>
+
+            <span class="status-sistema">
+                <span class="status-bola"></span>
+                Sistema ativo
+            </span>
+
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- ================================== -->
+        <!-- ÁREA DE LOGIN -->
+        <!-- ================================== -->
+
+        <section
+            class="formulario"
+            id="areaLogin"
+        >
+
+            <h2>Acesso ao sistema</h2>
+
+            <p>
+                Entre com seu e-mail e senha para
+                acessar as funcionalidades protegidas.
+            </p>
+
+            <form id="formLogin">
+
+                <label for="emailLogin">
+                    E-mail
+                </label>
+
+                <input
+                    type="email"
+                    id="emailLogin"
+                    placeholder="Digite seu e-mail"
+                    autocomplete="username"
+                    maxlength="150"
+                    required
+                >
+
+                <label for="senhaLogin">
+                    Senha
+                </label>
+
+                <input
+                    type="password"
+                    id="senhaLogin"
+                    placeholder="Digite sua senha"
+                    autocomplete="current-password"
+                    required
+                >
+
+                <button
+                    type="submit"
+                    id="btnLogin"
+                >
+                    Entrar no sistema
+                </button>
+
+            </form>
+
+            <p
+                id="mensagemLogin"
+                role="status"
+                aria-live="polite"
+            ></p>
+
+        </section>
+
+        <!-- ================================== -->
+        <!-- USUÁRIO AUTENTICADO -->
+        <!-- ================================== -->
+
+        <section
+            class="formulario"
+            id="areaUsuario"
+            style="display: none;"
+        >
+
+            <h2>Usuário autenticado</h2>
+
+            <p>
+                Bem-vindo,
+                <strong id="nomeUsuario"></strong>
+            </p>
+
+            <p>
+                Perfil de acesso:
+                <strong id="perfilUsuario"></strong>
+            </p>
+
+            <button
+                type="button"
+                id="btnSair"
+            >
+                Sair do sistema
+            </button>
+
+        </section>
+
+        <!-- ================================== -->
+        <!-- CONTEÚDO PRINCIPAL -->
+        <!-- ================================== -->
+
+        <div
+            id="conteudoSistema"
+            style="display: none;"
+        >
+
+            <!-- ================================== -->
+            <!-- DASHBOARD DE EQUIPAMENTOS -->
+            <!-- ================================== -->
+
+            <section class="dashboard">
+
+                <div class="card-indicador">
+
+                    <div class="indicador-topo">
+                        <span>Total de equipamentos</span>
+                        <span class="indicador-icone">▣</span>
+                    </div>
+
+                    <h3 id="totalEquipamentos">0</h3>
+
+                    <p>Registros no sistema</p>
+
+                </div>
+
+                <div class="card-indicador">
+
+                    <div class="indicador-topo">
+                        <span>Resultados encontrados</span>
+                        <span class="indicador-icone">⌕</span>
+                    </div>
+
+                    <h3 id="resultadosPesquisa">0</h3>
+
+                    <p>Após a pesquisa</p>
+
+                </div>
+
+                <div class="card-indicador">
+
+                    <div class="indicador-topo">
+                        <span>Patrimônios registrados</span>
+                        <span class="indicador-icone">▤</span>
+                    </div>
+
+                    <h3 id="totalPatrimonios">0</h3>
+
+                    <p>Identificações cadastradas</p>
+
+                </div>
+
+            </section>
+
+            <!-- ================================== -->
+            <!-- CADASTRO DE EQUIPAMENTOS -->
+            <!-- SOMENTE ADMINISTRADOR -->
+            <!-- ================================== -->
+
+            <section
+                class="formulario"
+                id="areaCadastro"
+                style="display: none;"
+            >
+
+                <h2>Cadastrar equipamento</h2>
+
+                <p>
+                    Área disponível para administradores.
+                </p>
+
+                <form id="formEquipamento">
+
+                    <label for="nome">
+                        Nome do equipamento
+                    </label>
+
+                    <input
+                        type="text"
+                        id="nome"
+                        placeholder="Ex: Trator John Deere"
+                        maxlength="100"
+                        required
+                    >
+
+                    <label for="patrimonio">
+                        Patrimônio
+                    </label>
+
+                    <input
+                        type="text"
+                        id="patrimonio"
+                        placeholder="Ex: TR001"
+                        maxlength="50"
+                        required
+                    >
+
+                    <button type="submit">
+                        Cadastrar equipamento
+                    </button>
+
+                </form>
+
+            </section>
+
+            <!-- MENSAGENS DO SISTEMA -->
+
+            <p
+                id="mensagem"
+                role="status"
+                aria-live="polite"
+            ></p>
+
+            <!-- ================================== -->
+            <!-- LISTAGEM DE EQUIPAMENTOS -->
+            <!-- ================================== -->
+
+            <section class="lista">
+
+                <div class="lista-cabecalho">
+
+                    <div>
+                        <h2>Equipamentos cadastrados</h2>
+
+                        <p>
+                            Consulte os equipamentos registrados
+                            no sistema.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="acoes-lista">
+
+                    <input
+                        type="text"
+                        id="pesquisa"
+                        placeholder="Pesquisar por nome ou patrimônio..."
+                        autocomplete="off"
+                        aria-label="Pesquisar equipamentos"
+                    >
+
+                    <button
+                        type="button"
+                        id="btnExportar"
+                    >
+                        Exportar para Excel
+                    </button>
+
+                </div>
+
+                <div class="tabela-container">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Equipamento</th>
+                                <th>Patrimônio</th>
+
+                                <th id="cabecalhoAcoes">
+                                    Ações
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="listaEquipamentos"></tbody>
+
+                    </table>
+
+                </div>
+
+                <p
+                    id="semResultados"
+                    style="display: none;"
+                >
+                    Nenhum equipamento encontrado.
+                </p>
+
+            </section>
+
+            <!-- ================================== -->
+            <!-- GERENCIAMENTO DE USUÁRIOS -->
+            <!-- SOMENTE ADMINISTRADOR -->
+            <!-- ================================== -->
+
+            <section
+                class="formulario"
+                id="areaGerenciamentoUsuarios"
+                style="display: none;"
+            >
+
+                <h2>Gerenciamento de usuários</h2>
+
+                <p>
+                    Cadastre e consulte os usuários
+                    que podem acessar o sistema.
+                </p>
+
+                <!-- INDICADORES -->
+
+                <div class="dashboard">
+
+                    <div class="card-indicador">
+
+                        <div class="indicador-topo">
+                            <span>Total de usuários</span>
+                            <span class="indicador-icone">♙</span>
+                        </div>
+
+                        <h3 id="totalUsuarios">0</h3>
+
+                        <p>Contas cadastradas</p>
+
+                    </div>
+
+                    <div class="card-indicador">
+
+                        <div class="indicador-topo">
+                            <span>Administradores</span>
+                            <span class="indicador-icone">◆</span>
+                        </div>
+
+                        <h3 id="totalAdministradores">0</h3>
+
+                        <p>Acesso completo</p>
+
+                    </div>
+
+                    <div class="card-indicador">
+
+                        <div class="indicador-topo">
+                            <span>Operadores</span>
+                            <span class="indicador-icone">▣</span>
+                        </div>
+
+                        <h3 id="totalOperadores">0</h3>
+
+                        <p>Acesso de consulta</p>
+
+                    </div>
+
+                </div>
+
+                <!-- CADASTRAR NOVO USUÁRIO -->
+
+                <h3>Cadastrar novo usuário</h3>
+
+                <p>
+                    Todo novo usuário recebe inicialmente
+                    o perfil operador.
+                </p>
+
+                <form id="formNovoUsuario">
+
+                    <label for="nomeNovoUsuario">
+                        Nome completo
+                    </label>
+
+                    <input
+                        type="text"
+                        id="nomeNovoUsuario"
+                        placeholder="Ex: João da Silva"
+                        autocomplete="name"
+                        maxlength="100"
+                        required
+                    >
+
+                    <label for="emailNovoUsuario">
+                        E-mail
+                    </label>
+
+                    <input
+                        type="email"
+                        id="emailNovoUsuario"
+                        placeholder="Ex: joao@empresa.com"
+                        autocomplete="off"
+                        maxlength="150"
+                        required
+                    >
+
+                    <label for="senhaNovoUsuario">
+                        Senha inicial
+                    </label>
+
+                    <input
+                        type="password"
+                        id="senhaNovoUsuario"
+                        placeholder="Mínimo de 8 caracteres"
+                        autocomplete="new-password"
+                        minlength="8"
+                        required
+                    >
+
+                    <p>
+                        Perfil inicial:
+                        <strong>Operador</strong>
+                    </p>
+
+                    <button
+                        type="submit"
+                        id="btnCadastrarUsuario"
+                    >
+                        Cadastrar usuário
+                    </button>
+
+                </form>
+
+                <p
+                    id="mensagemUsuarios"
+                    role="status"
+                    aria-live="polite"
+                ></p>
+
+            </section>
+
+            <!-- ================================== -->
+            <!-- LISTAGEM E PERMISSÕES DE USUÁRIOS -->
+            <!-- SOMENTE ADMINISTRADOR -->
+            <!-- ================================== -->
+
+            <section
+                class="lista"
+                id="areaListaUsuarios"
+                style="display: none;"
+            >
+
+                <div class="lista-cabecalho">
+
+                    <div>
+                        <h2>Usuários cadastrados</h2>
+
+                        <p>
+                            Consulte os usuários e gerencie
+                            seus perfis de acesso.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="acoes-lista">
+
+                    <input
+                        type="text"
+                        id="pesquisaUsuarios"
+                        placeholder="Pesquisar nome ou e-mail..."
+                        autocomplete="off"
+                        aria-label="Pesquisar usuários"
+                    >
+
+                    <button
+                        type="button"
+                        id="btnAtualizarUsuarios"
+                    >
+                        Atualizar lista
+                    </button>
+
+                </div>
+
+                <div class="tabela-container">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>E-mail</th>
+                                <th>Perfil</th>
+                                <th>Data de cadastro</th>
+
+                                <!-- NOVA COLUNA -->
+                                <th id="cabecalhoAcoesUsuarios">
+                                    Ações
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="listaUsuarios"></tbody>
+
+                    </table>
+
+                </div>
+
+                <p
+                    id="semUsuarios"
+                    style="display: none;"
+                >
+                    Nenhum usuário encontrado.
+                </p>
+
+                <!-- MENSAGENS DE ALTERAÇÃO DE PERFIL -->
+
+                <p
+                    id="mensagemPerfil"
+                    role="status"
+                    aria-live="polite"
+                ></p>
+
+            </section>
+
+        </div>
+
+        <!-- ================================== -->
+        <!-- RODAPÉ -->
+        <!-- ================================== -->
+
+        <footer>
+            <p>
+                Gestor Equipamentos |
+                Sistema de Gestão de Patrimônio
+            </p>
+        </footer>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
