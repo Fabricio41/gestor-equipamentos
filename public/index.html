@@ -1,553 +1,832 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Gestor Equipamentos | Sistema de Gestão</title>
+    <meta name="description" content="Gestor de Equipamentos: controle de patrimônio e usuários.">
+
+    <title>Gestor de Equipamentos | Painel</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <!-- ================================== -->
-    <!-- CABEÇALHO -->
-    <!-- ================================== -->
+    <!-- ===================================== -->
+    <!-- TELA DE LOGIN -->
+    <!-- ===================================== -->
 
-    <header>
-        <div class="container cabecalho">
+    <section id="areaLogin" class="login-layout">
 
-            <div>
-                <h1>Gestor Equipamentos</h1>
-                <p>Controle inteligente de patrimônio e máquinas</p>
+        <div class="login-apresentacao">
+
+            <div class="marca-login">
+
+                <span class="marca-icone">G</span>
+
+                <div>
+                    <strong>GESTOR</strong>
+                    <span>EQUIPAMENTOS</span>
+                </div>
+
             </div>
 
-            <span class="status-sistema">
-                <span class="status-bola"></span>
-                Sistema ativo
-            </span>
+            <div class="login-chamada">
 
-        </div>
-    </header>
+                <span class="etiqueta">
+                    PLATAFORMA DE GESTÃO
+                </span>
 
-    <main class="container">
-
-        <!-- ================================== -->
-        <!-- ÁREA DE LOGIN -->
-        <!-- ================================== -->
-
-        <section
-            class="formulario"
-            id="areaLogin"
-        >
-
-            <h2>Acesso ao sistema</h2>
-
-            <p>
-                Entre com seu e-mail e senha para
-                acessar as funcionalidades protegidas.
-            </p>
-
-            <form id="formLogin">
-
-                <label for="emailLogin">
-                    E-mail
-                </label>
-
-                <input
-                    type="email"
-                    id="emailLogin"
-                    placeholder="Digite seu e-mail"
-                    autocomplete="username"
-                    maxlength="150"
-                    required
-                >
-
-                <label for="senhaLogin">
-                    Senha
-                </label>
-
-                <input
-                    type="password"
-                    id="senhaLogin"
-                    placeholder="Digite sua senha"
-                    autocomplete="current-password"
-                    required
-                >
-
-                <button
-                    type="submit"
-                    id="btnLogin"
-                >
-                    Entrar no sistema
-                </button>
-
-            </form>
-
-            <p
-                id="mensagemLogin"
-                role="status"
-                aria-live="polite"
-            ></p>
-
-        </section>
-
-        <!-- ================================== -->
-        <!-- USUÁRIO AUTENTICADO -->
-        <!-- ================================== -->
-
-        <section
-            class="formulario"
-            id="areaUsuario"
-            style="display: none;"
-        >
-
-            <h2>Usuário autenticado</h2>
-
-            <p>
-                Bem-vindo,
-                <strong id="nomeUsuario"></strong>
-            </p>
-
-            <p>
-                Perfil de acesso:
-                <strong id="perfilUsuario"></strong>
-            </p>
-
-            <button
-                type="button"
-                id="btnSair"
-            >
-                Sair do sistema
-            </button>
-
-        </section>
-
-        <!-- ================================== -->
-        <!-- CONTEÚDO PRINCIPAL -->
-        <!-- ================================== -->
-
-        <div
-            id="conteudoSistema"
-            style="display: none;"
-        >
-
-            <!-- ================================== -->
-            <!-- DASHBOARD DE EQUIPAMENTOS -->
-            <!-- ================================== -->
-
-            <section class="dashboard">
-
-                <div class="card-indicador">
-
-                    <div class="indicador-topo">
-                        <span>Total de equipamentos</span>
-                        <span class="indicador-icone">▣</span>
-                    </div>
-
-                    <h3 id="totalEquipamentos">0</h3>
-
-                    <p>Registros no sistema</p>
-
-                </div>
-
-                <div class="card-indicador">
-
-                    <div class="indicador-topo">
-                        <span>Resultados encontrados</span>
-                        <span class="indicador-icone">⌕</span>
-                    </div>
-
-                    <h3 id="resultadosPesquisa">0</h3>
-
-                    <p>Após a pesquisa</p>
-
-                </div>
-
-                <div class="card-indicador">
-
-                    <div class="indicador-topo">
-                        <span>Patrimônios registrados</span>
-                        <span class="indicador-icone">▤</span>
-                    </div>
-
-                    <h3 id="totalPatrimonios">0</h3>
-
-                    <p>Identificações cadastradas</p>
-
-                </div>
-
-            </section>
-
-            <!-- ================================== -->
-            <!-- CADASTRO DE EQUIPAMENTOS -->
-            <!-- SOMENTE ADMINISTRADOR -->
-            <!-- ================================== -->
-
-            <section
-                class="formulario"
-                id="areaCadastro"
-                style="display: none;"
-            >
-
-                <h2>Cadastrar equipamento</h2>
+                <h1>
+                    Seu patrimônio
+                    <span>sob controle.</span>
+                </h1>
 
                 <p>
-                    Área disponível para administradores.
+                    Cadastre, consulte e organize seus
+                    equipamentos em um painel moderno
+                    e seguro.
                 </p>
 
-                <form id="formEquipamento">
+                <div class="login-beneficios">
 
-                    <label for="nome">
-                        Nome do equipamento
+                    <span>✓ Gestão de equipamentos</span>
+
+                    <span>✓ Controle de acesso</span>
+
+                    <span>✓ Exportação de relatórios CSV</span>
+
+                </div>
+
+            </div>
+
+            <p class="login-rodape">
+                Gestor de Equipamentos • Acesso restrito
+            </p>
+
+        </div>
+
+
+        <div class="login-formulario-area">
+
+            <div class="login-card">
+
+                <div class="login-card-icone">
+                    🔐
+                </div>
+
+                <span class="etiqueta">
+                    ACESSO AO SISTEMA
+                </span>
+
+                <h2>Bem-vindo de volta</h2>
+
+                <p class="texto-secundario">
+                    Entre com seu e-mail e sua senha.
+                </p>
+
+                <form id="formLogin">
+
+                    <label for="emailLogin">
+                        E-mail
                     </label>
 
-                    <input
-                        type="text"
-                        id="nome"
-                        placeholder="Ex: Trator John Deere"
-                        maxlength="100"
-                        required
-                    >
+                    <input id="emailLogin" type="email" placeholder="seuemail@empresa.com" autocomplete="username"
+                        maxlength="150" required>
 
-                    <label for="patrimonio">
-                        Patrimônio
+                    <label for="senhaLogin">
+                        Senha
                     </label>
 
-                    <input
-                        type="text"
-                        id="patrimonio"
-                        placeholder="Ex: TR001"
-                        maxlength="50"
-                        required
-                    >
+                    <input id="senhaLogin" type="password" placeholder="Digite sua senha"
+                        autocomplete="current-password" required>
 
-                    <button type="submit">
-                        Cadastrar equipamento
+                    <button id="btnLogin" class="btn-primario" type="submit">
+                        Entrar no sistema
                     </button>
 
                 </form>
 
-            </section>
+                <p id="mensagemLogin" class="mensagem-feedback" role="status" aria-live="polite"></p>
 
-            <!-- MENSAGENS DO SISTEMA -->
+                <p class="login-seguranca">
+                    🔒 Área protegida por autenticação
+                </p>
 
-            <p
-                id="mensagem"
-                role="status"
-                aria-live="polite"
-            ></p>
+            </div>
 
-            <!-- ================================== -->
-            <!-- LISTAGEM DE EQUIPAMENTOS -->
-            <!-- ================================== -->
+        </div>
 
-            <section class="lista">
+    </section>
 
-                <div class="lista-cabecalho">
+
+    <!-- ===================================== -->
+    <!-- SISTEMA APÓS LOGIN -->
+    <!-- ===================================== -->
+
+    <div id="conteudoSistema" style="display: none;">
+
+        <div class="sistema-layout">
+
+            <!-- ===================================== -->
+            <!-- MENU LATERAL -->
+            <!-- ===================================== -->
+
+            <aside class="sidebar">
+
+                <!-- LOGOTIPO GE -->
+                <div class="sidebar-marca sidebar-marca-icone" aria-label="Gestor de Equipamentos">
+                    <div class="logo-ge">
+                        <span class="logo-ge-letras">GE</span>
+                        <span class="logo-ge-ponto"></span>
+                    </div>
+
+                    <div class="logo-ge-nome">
+                        <strong>GESTOR</strong>
+                        <span>EQUIPAMENTOS</span>
+                    </div>
+                </div>
+
+
+
+
+        <!-- NAVEGAÇÃO -->
+
+        <nav class="sidebar-navegacao" aria-label="Menu principal">
+
+            <span class="menu-titulo">
+                MENU PRINCIPAL
+            </span>
+
+            <a class="menu-link ativo" href="#painel">
+                <span class="menu-icone">⌂</span>
+                Dashboard
+            </a>
+
+            <a class="menu-link" href="#areaListaEquipamentos">
+                <span class="menu-icone">▤</span>
+                Equipamentos
+            </a>
+
+            <a class="menu-link" href="#areaListaEquipamentos">
+                <span class="menu-icone">⇩</span>
+                Relatório CSV
+            </a>
+
+
+            <!-- MENU DO ADMINISTRADOR -->
+
+            <div id="menuAdministrador" style="display: none;">
+
+                <span class="menu-titulo">
+                    ADMINISTRAÇÃO
+                </span>
+
+                <a class="menu-link" href="#areaCadastro">
+                    <span class="menu-icone">＋</span>
+                    Cadastrar
+                </a>
+
+                <a class="menu-link" href="#areaGerenciamentoUsuarios">
+                    <span class="menu-icone">♙</span>
+                    Gerenciar usuários
+                </a>
+
+                <a class="menu-link" href="#areaListaUsuarios">
+                    <span class="menu-icone">☷</span>
+                    Lista de usuários
+                </a>
+
+            </div>
+
+        </nav>
+
+
+        <div class="sidebar-rodape">
+
+            <p>
+                GESTOR DE EQUIPAMENTOS
+            </p>
+
+            <small>
+                Node.js • PostgreSQL
+            </small>
+
+        </div>
+
+        </aside>
+
+
+        <!-- ===================================== -->
+        <!-- CONTEÚDO PRINCIPAL -->
+        <!-- ===================================== -->
+
+        <main class="workspace">
+
+            <!-- CABEÇALHO -->
+
+            <header class="topbar">
+
+                <div class="topbar-titulo">
+
+                    <span class="etiqueta">
+                        PAINEL DE CONTROLE
+                    </span>
+
+                    <h1>
+                        Gestor de Equipamentos
+                    </h1>
+
+                    <p>
+                        Controle de patrimônio e
+                        equipamentos em um só lugar.
+                    </p>
+
+                </div>
+
+
+                <div class="topbar-acoes">
+
+                    <span class="topbar-status">
+
+                        <span class="status-bola"></span>
+
+                        Área autenticada
+
+                    </span>
+
+                    <span class="topbar-avatar" aria-hidden="true">
+                        G
+                    </span>
+
+                </div>
+
+            </header>
+
+
+            <!-- USUÁRIO LOGADO -->
+
+            <section id="areaUsuario" class="usuario-logado" style="display: none;">
+
+                <div class="usuario-identificacao">
+
+                    <span class="usuario-avatar" aria-hidden="true">
+                        👤
+                    </span>
 
                     <div>
-                        <h2>Equipamentos cadastrados</h2>
 
-                        <p>
-                            Consulte os equipamentos registrados
-                            no sistema.
-                        </p>
+                        <span class="usuario-boas-vindas">
+                            Conectado como
+                        </span>
+
+                        <strong id="nomeUsuario"></strong>
+
+                        <span class="usuario-perfil">
+
+                            Perfil:
+
+                            <strong id="perfilUsuario"></strong>
+
+                        </span>
+
                     </div>
 
                 </div>
 
-                <div class="acoes-lista">
 
-                    <input
-                        type="text"
-                        id="pesquisa"
-                        placeholder="Pesquisar por nome ou patrimônio..."
-                        autocomplete="off"
-                        aria-label="Pesquisar equipamentos"
-                    >
-
-                    <button
-                        type="button"
-                        id="btnExportar"
-                    >
-                        Exportar para Excel
-                    </button>
-
-                </div>
-
-                <div class="tabela-container">
-
-                    <table>
-
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Equipamento</th>
-                                <th>Patrimônio</th>
-
-                                <th id="cabecalhoAcoes">
-                                    Ações
-                                </th>
-                            </tr>
-                        </thead>
-
-                        <tbody id="listaEquipamentos"></tbody>
-
-                    </table>
-
-                </div>
-
-                <p
-                    id="semResultados"
-                    style="display: none;"
-                >
-                    Nenhum equipamento encontrado.
-                </p>
+                <button id="btnSair" type="button" class="btn-sair">
+                    Sair do sistema
+                </button>
 
             </section>
 
-            <!-- ================================== -->
-            <!-- GERENCIAMENTO DE USUÁRIOS -->
-            <!-- SOMENTE ADMINISTRADOR -->
-            <!-- ================================== -->
 
-            <section
-                class="formulario"
-                id="areaGerenciamentoUsuarios"
-                style="display: none;"
-            >
+            <!-- ===================================== -->
+            <!-- DASHBOARD -->
+            <!-- ===================================== -->
 
-                <h2>Gerenciamento de usuários</h2>
+            <div id="painel">
 
-                <p>
-                    Cadastre e consulte os usuários
-                    que podem acessar o sistema.
-                </p>
+                <!-- TRATOR REALISTA -->
+                <!-- SEM TEXTO SOBRE A IMAGEM -->
 
-                <!-- INDICADORES -->
+                <section class="hero-dashboard" aria-label="Equipamentos agrícolas">
 
-                <div class="dashboard">
+                    <img class="hero-foto" src="assets/trator-hero-realista.png"
+                        alt="Trator agrícola verde em uma lavoura ao pôr do sol">
 
-                    <div class="card-indicador">
+                    <div class="hero-vinheta" aria-hidden="true"></div>
+
+                </section>
+
+
+                <!-- ===================================== -->
+                <!-- INDICADORES REAIS -->
+                <!-- ===================================== -->
+
+                <section class="dashboard" aria-label="Indicadores de equipamentos">
+
+                    <article class="card-indicador">
 
                         <div class="indicador-topo">
+
+                            <span>
+                                Total de equipamentos
+                            </span>
+
+                            <span class="indicador-icone">
+                                ▣
+                            </span>
+
+                        </div>
+
+                        <h3 id="totalEquipamentos">
+                            0
+                        </h3>
+
+                        <p>
+                            Registros cadastrados
+                        </p>
+
+                    </article>
+
+
+                    <article class="card-indicador">
+
+                        <div class="indicador-topo">
+
+                            <span>
+                                Resultados da pesquisa
+                            </span>
+
+                            <span class="indicador-icone">
+                                ⌕
+                            </span>
+
+                        </div>
+
+                        <h3 id="resultadosPesquisa">
+                            0
+                        </h3>
+
+                        <p>
+                            Equipamentos encontrados
+                        </p>
+
+                    </article>
+
+
+                    <article class="card-indicador">
+
+                        <div class="indicador-topo">
+
+                            <span>
+                                Patrimônios registrados
+                            </span>
+
+                            <span class="indicador-icone">
+                                ◈
+                            </span>
+
+                        </div>
+
+                        <h3 id="totalPatrimonios">
+                            0
+                        </h3>
+
+                        <p>
+                            Identificações únicas
+                        </p>
+
+                    </article>
+
+                </section>
+
+            </div>
+
+
+            <!-- MENSAGENS DO SISTEMA -->
+
+            <p id="mensagem" class="mensagem-feedback" role="status" aria-live="polite"></p>
+
+
+            <!-- ===================================== -->
+            <!-- CADASTRO + LISTAGEM -->
+            <!-- ===================================== -->
+
+            <div class="main-panels">
+
+                <!-- CADASTRAR EQUIPAMENTO -->
+
+                <section id="areaCadastro" class="formulario" style="display: none;">
+
+                    <div class="secao-cabecalho">
+
+                        <div>
+
+                            <span class="etiqueta">
+                                ADMINISTRAÇÃO
+                            </span>
+
+                            <h2>
+                                Cadastrar equipamento
+                            </h2>
+
+                        </div>
+
+                        <span class="secao-icone">
+                            ＋
+                        </span>
+
+                    </div>
+
+
+                    <p class="texto-secundario">
+                        Adicione um equipamento ao patrimônio.
+                    </p>
+
+
+                    <form id="formEquipamento">
+
+                        <div class="form-grid">
+
+                            <div class="campo-formulario">
+
+                                <label for="nome">
+                                    Nome do equipamento
+                                </label>
+
+                                <input id="nome" type="text" maxlength="100" placeholder="Ex.: Trator John Deere"
+                                    required>
+
+                            </div>
+
+
+                            <div class="campo-formulario">
+
+                                <label for="patrimonio">
+                                    Número do patrimônio
+                                </label>
+
+                                <input id="patrimonio" type="text" maxlength="50" placeholder="Ex.: TR001" required>
+
+                            </div>
+
+                        </div>
+
+
+                        <button class="btn-primario" type="submit">
+                            ＋ Cadastrar equipamento
+                        </button>
+
+                    </form>
+
+                </section>
+
+
+                <!-- LISTAGEM DE EQUIPAMENTOS -->
+
+                <section id="areaListaEquipamentos" class="lista">
+
+                    <div class="secao-cabecalho">
+
+                        <div>
+
+                            <span class="etiqueta">
+                                PATRIMÔNIO
+                            </span>
+
+                            <h2>
+                                Equipamentos cadastrados
+                            </h2>
+
+                        </div>
+
+                        <span class="secao-icone">
+                            ▤
+                        </span>
+
+                    </div>
+
+
+                    <div class="acoes-lista">
+
+                        <input id="pesquisa" type="search" placeholder="Pesquisar nome ou patrimônio..."
+                            autocomplete="off" aria-label="Pesquisar equipamentos">
+
+                        <button id="btnExportar" type="button" class="btn-exportar">
+                            ⇩ Exportar CSV
+                        </button>
+
+                    </div>
+
+
+                    <div class="tabela-container">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>ID</th>
+
+                                    <th>Equipamento</th>
+
+                                    <th>Patrimônio</th>
+
+                                    <th id="cabecalhoAcoes">
+                                        Ações
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="listaEquipamentos">
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+                    <p id="semResultados" class="estado-vazio" style="display: none;">
+                        Nenhum equipamento encontrado.
+                    </p>
+
+                </section>
+
+            </div>
+
+
+            <!-- ===================================== -->
+            <!-- GERENCIAMENTO DE USUÁRIOS -->
+            <!-- ===================================== -->
+
+            <section id="areaGerenciamentoUsuarios" class="formulario" style="display: none;">
+
+                <div class="secao-cabecalho">
+
+                    <div>
+
+                        <span class="etiqueta">
+                            CONTROLE DE ACESSO
+                        </span>
+
+                        <h2>
+                            Gerenciamento de usuários
+                        </h2>
+
+                    </div>
+
+                    <span class="secao-icone">
+                        ♙
+                    </span>
+
+                </div>
+
+
+                <!-- INDICADORES DE USUÁRIOS -->
+
+                <div class="dashboard dashboard-usuarios">
+
+                    <article class="card-indicador">
+
+                        <div class="indicador-topo">
+
                             <span>Total de usuários</span>
-                            <span class="indicador-icone">♙</span>
+
+                            <span class="indicador-icone">
+                                ♙
+                            </span>
+
                         </div>
 
                         <h3 id="totalUsuarios">0</h3>
 
                         <p>Contas cadastradas</p>
 
-                    </div>
+                    </article>
 
-                    <div class="card-indicador">
+
+                    <article class="card-indicador">
 
                         <div class="indicador-topo">
+
                             <span>Administradores</span>
-                            <span class="indicador-icone">◆</span>
+
+                            <span class="indicador-icone">
+                                ◆
+                            </span>
+
                         </div>
 
                         <h3 id="totalAdministradores">0</h3>
 
-                        <p>Acesso completo</p>
+                        <p>Acesso administrativo</p>
 
-                    </div>
+                    </article>
 
-                    <div class="card-indicador">
+
+                    <article class="card-indicador">
 
                         <div class="indicador-topo">
+
                             <span>Operadores</span>
-                            <span class="indicador-icone">▣</span>
+
+                            <span class="indicador-icone">
+                                ▣
+                            </span>
+
                         </div>
 
                         <h3 id="totalOperadores">0</h3>
 
                         <p>Acesso de consulta</p>
 
-                    </div>
+                    </article>
 
                 </div>
 
-                <!-- CADASTRAR NOVO USUÁRIO -->
 
-                <h3>Cadastrar novo usuário</h3>
+                <!-- CADASTRO DE USUÁRIO -->
 
-                <p>
-                    Todo novo usuário recebe inicialmente
-                    o perfil operador.
-                </p>
+                <h3 class="subsecao-titulo">
+                    Cadastrar novo usuário
+                </h3>
+
 
                 <form id="formNovoUsuario">
 
-                    <label for="nomeNovoUsuario">
-                        Nome completo
-                    </label>
+                    <div class="form-grid form-grid-usuarios">
 
-                    <input
-                        type="text"
-                        id="nomeNovoUsuario"
-                        placeholder="Ex: João da Silva"
-                        autocomplete="name"
-                        maxlength="100"
-                        required
-                    >
+                        <div class="campo-formulario">
 
-                    <label for="emailNovoUsuario">
-                        E-mail
-                    </label>
+                            <label for="nomeNovoUsuario">
+                                Nome completo
+                            </label>
 
-                    <input
-                        type="email"
-                        id="emailNovoUsuario"
-                        placeholder="Ex: joao@empresa.com"
-                        autocomplete="off"
-                        maxlength="150"
-                        required
-                    >
+                            <input id="nomeNovoUsuario" type="text" maxlength="100" placeholder="Nome do usuário"
+                                autocomplete="name" required>
 
-                    <label for="senhaNovoUsuario">
-                        Senha inicial
-                    </label>
+                        </div>
 
-                    <input
-                        type="password"
-                        id="senhaNovoUsuario"
-                        placeholder="Mínimo de 8 caracteres"
-                        autocomplete="new-password"
-                        minlength="8"
-                        required
-                    >
 
-                    <p>
+                        <div class="campo-formulario">
+
+                            <label for="emailNovoUsuario">
+                                E-mail
+                            </label>
+
+                            <input id="emailNovoUsuario" type="email" maxlength="150" placeholder="usuario@empresa.com"
+                                autocomplete="off" required>
+
+                        </div>
+
+
+                        <div class="campo-formulario">
+
+                            <label for="senhaNovoUsuario">
+                                Senha inicial
+                            </label>
+
+                            <input id="senhaNovoUsuario" type="password" minlength="8"
+                                placeholder="Mínimo de 8 caracteres" autocomplete="new-password" required>
+
+                        </div>
+
+                    </div>
+
+
+                    <p class="perfil-inicial">
+
                         Perfil inicial:
+
                         <strong>Operador</strong>
+
                     </p>
 
-                    <button
-                        type="submit"
-                        id="btnCadastrarUsuario"
-                    >
-                        Cadastrar usuário
+
+                    <button id="btnCadastrarUsuario" class="btn-primario" type="submit">
+                        ＋ Cadastrar usuário
                     </button>
 
                 </form>
 
-                <p
-                    id="mensagemUsuarios"
-                    role="status"
-                    aria-live="polite"
-                ></p>
+
+                <p id="mensagemUsuarios" class="mensagem-feedback" role="status" aria-live="polite"></p>
 
             </section>
 
-            <!-- ================================== -->
-            <!-- LISTAGEM E PERMISSÕES DE USUÁRIOS -->
-            <!-- SOMENTE ADMINISTRADOR -->
-            <!-- ================================== -->
 
-            <section
-                class="lista"
-                id="areaListaUsuarios"
-                style="display: none;"
-            >
+            <!-- ===================================== -->
+            <!-- LISTA DE USUÁRIOS -->
+            <!-- ===================================== -->
 
-                <div class="lista-cabecalho">
+            <section id="areaListaUsuarios" class="lista" style="display: none;">
+
+                <div class="secao-cabecalho">
 
                     <div>
-                        <h2>Usuários cadastrados</h2>
 
-                        <p>
-                            Consulte os usuários e gerencie
-                            seus perfis de acesso.
-                        </p>
+                        <span class="etiqueta">
+                            PERMISSÕES
+                        </span>
+
+                        <h2>
+                            Usuários cadastrados
+                        </h2>
+
                     </div>
 
+                    <span class="secao-icone">
+                        ☷
+                    </span>
+
                 </div>
+
 
                 <div class="acoes-lista">
 
-                    <input
-                        type="text"
-                        id="pesquisaUsuarios"
-                        placeholder="Pesquisar nome ou e-mail..."
-                        autocomplete="off"
-                        aria-label="Pesquisar usuários"
-                    >
+                    <input id="pesquisaUsuarios" type="search" placeholder="Pesquisar nome ou e-mail..."
+                        autocomplete="off" aria-label="Pesquisar usuários">
 
-                    <button
-                        type="button"
-                        id="btnAtualizarUsuarios"
-                    >
-                        Atualizar lista
+                    <button id="btnAtualizarUsuarios" type="button" class="btn-secundario">
+                        ↻ Atualizar lista
                     </button>
 
                 </div>
+
 
                 <div class="tabela-container">
 
                     <table>
 
                         <thead>
+
                             <tr>
+
                                 <th>ID</th>
+
                                 <th>Nome</th>
+
                                 <th>E-mail</th>
+
                                 <th>Perfil</th>
+
                                 <th>Data de cadastro</th>
 
-                                <!-- NOVA COLUNA -->
-                                <th id="cabecalhoAcoesUsuarios">
-                                    Ações
-                                </th>
+                                <th>Ações</th>
+
                             </tr>
+
                         </thead>
 
-                        <tbody id="listaUsuarios"></tbody>
+                        <tbody id="listaUsuarios">
+                        </tbody>
 
                     </table>
 
                 </div>
 
-                <p
-                    id="semUsuarios"
-                    style="display: none;"
-                >
+
+                <p id="semUsuarios" class="estado-vazio" style="display: none;">
                     Nenhum usuário encontrado.
                 </p>
 
-                <!-- MENSAGENS DE ALTERAÇÃO DE PERFIL -->
 
-                <p
-                    id="mensagemPerfil"
-                    role="status"
-                    aria-live="polite"
-                ></p>
+                <p id="mensagemPerfil" class="mensagem-feedback" role="status" aria-live="polite"></p>
 
             </section>
 
-        </div>
 
-        <!-- ================================== -->
-        <!-- RODAPÉ -->
-        <!-- ================================== -->
+            <!-- RODAPÉ -->
 
-        <footer>
-            <p>
-                Gestor Equipamentos |
-                Sistema de Gestão de Patrimônio
-            </p>
-        </footer>
+            <footer class="rodape-sistema">
 
-    </main>
+                <span>
+                    © 2026 Gestor de Equipamentos
+                </span>
+
+                <span>
+                    Node.js • Express • PostgreSQL
+                </span>
+
+            </footer>
+
+        </main>
+
+    </div>
+
+    </div>
+
+
+    <!-- JAVASCRIPT EXISTENTE -->
 
     <script src="script.js"></script>
 
