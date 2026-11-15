@@ -1,0 +1,37 @@
+
+name: Testes automatizados
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  testes:
+    name: Testar API Node.js
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    env:
+      JWT_SECRET: "chave-ficticia-exclusiva-para-testes-ci"
+      DB_PASSWORD: "senha-ficticia-exclusiva-para-testes-ci"
+
+    steps:
+      - name: Baixar codigo do repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Executar testes automatizados
+        run: npm test
