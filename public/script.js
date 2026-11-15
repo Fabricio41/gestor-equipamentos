@@ -1,100 +1,118 @@
 
+"use strict";
+
+// ==========================================
+// GESTOR EQUIPAMENTOS
+// JAVASCRIPT DO DASHBOARD
+// ==========================================
+
+// CONFIGURAÇÕES DA API
+
 const API_BASE = "http://localhost:3000";
+
 const API_URL = `${API_BASE}/equipamentos`;
 const USUARIOS_URL = `${API_BASE}/usuarios`;
 
-// ========================================
-// ELEMENTOS DE LOGIN
-// ========================================
+// ==========================================
+// ELEMENTOS DO HTML
+// ==========================================
 
-const areaLogin = document.getElementById("areaLogin");
-const formLogin = document.getElementById("formLogin");
-const emailLogin = document.getElementById("emailLogin");
-const senhaLogin = document.getElementById("senhaLogin");
-const mensagemLogin = document.getElementById("mensagemLogin");
-const btnLogin = document.getElementById("btnLogin");
+const elemento = (id) => document.getElementById(id);
 
-const areaUsuario = document.getElementById("areaUsuario");
-const nomeUsuario = document.getElementById("nomeUsuario");
-const perfilUsuario = document.getElementById("perfilUsuario");
-const btnSair = document.getElementById("btnSair");
-const conteudoSistema = document.getElementById("conteudoSistema");
+// LOGIN
 
-// ========================================
-// ELEMENTOS DE EQUIPAMENTOS
-// ========================================
+const areaLogin = elemento("areaLogin");
+const formLogin = elemento("formLogin");
+const emailLogin = elemento("emailLogin");
+const senhaLogin = elemento("senhaLogin");
+const mensagemLogin = elemento("mensagemLogin");
+const btnLogin = elemento("btnLogin");
 
-const areaCadastro = document.getElementById("areaCadastro");
-const cabecalhoAcoes = document.getElementById("cabecalhoAcoes");
+// SESSÃO
 
-const formulario = document.getElementById("formEquipamento");
-const campoNome = document.getElementById("nome");
-const campoPatrimonio = document.getElementById("patrimonio");
-const listaEquipamentos = document.getElementById("listaEquipamentos");
-const mensagem = document.getElementById("mensagem");
-const pesquisa = document.getElementById("pesquisa");
-const semResultados = document.getElementById("semResultados");
+const conteudoSistema = elemento("conteudoSistema");
+const areaUsuario = elemento("areaUsuario");
+const nomeUsuario = elemento("nomeUsuario");
+const perfilUsuario = elemento("perfilUsuario");
+const btnSair = elemento("btnSair");
 
-const totalEquipamentos = document.getElementById("totalEquipamentos");
-const resultadosPesquisa = document.getElementById("resultadosPesquisa");
-const totalPatrimonios = document.getElementById("totalPatrimonios");
-const botaoExportar = document.getElementById("btnExportar");
+// MENU LATERAL
 
-// ========================================
-// ELEMENTOS DO GERENCIAMENTO DE USUÁRIOS
-// ========================================
+const menuAdministrador = elemento("menuAdministrador");
+
+// EQUIPAMENTOS
+
+const areaCadastro = elemento("areaCadastro");
+const formulario = elemento("formEquipamento");
+const campoNome = elemento("nome");
+const campoPatrimonio = elemento("patrimonio");
+
+const listaEquipamentos = elemento("listaEquipamentos");
+const cabecalhoAcoes = elemento("cabecalhoAcoes");
+
+const pesquisa = elemento("pesquisa");
+const semResultados = elemento("semResultados");
+const mensagem = elemento("mensagem");
+
+const totalEquipamentos = elemento("totalEquipamentos");
+const resultadosPesquisa = elemento("resultadosPesquisa");
+const totalPatrimonios = elemento("totalPatrimonios");
+
+const botaoExportar = elemento("btnExportar");
+
+// USUÁRIOS
 
 const areaGerenciamentoUsuarios =
-    document.getElementById("areaGerenciamentoUsuarios");
+    elemento("areaGerenciamentoUsuarios");
 
 const areaListaUsuarios =
-    document.getElementById("areaListaUsuarios");
+    elemento("areaListaUsuarios");
 
 const formNovoUsuario =
-    document.getElementById("formNovoUsuario");
+    elemento("formNovoUsuario");
 
 const nomeNovoUsuario =
-    document.getElementById("nomeNovoUsuario");
+    elemento("nomeNovoUsuario");
 
 const emailNovoUsuario =
-    document.getElementById("emailNovoUsuario");
+    elemento("emailNovoUsuario");
 
 const senhaNovoUsuario =
-    document.getElementById("senhaNovoUsuario");
+    elemento("senhaNovoUsuario");
 
 const btnCadastrarUsuario =
-    document.getElementById("btnCadastrarUsuario");
+    elemento("btnCadastrarUsuario");
 
 const mensagemUsuarios =
-    document.getElementById("mensagemUsuarios");
+    elemento("mensagemUsuarios");
 
 const mensagemPerfil =
-    document.getElementById("mensagemPerfil");
+    elemento("mensagemPerfil");
 
 const totalUsuarios =
-    document.getElementById("totalUsuarios");
+    elemento("totalUsuarios");
 
 const totalAdministradores =
-    document.getElementById("totalAdministradores");
+    elemento("totalAdministradores");
 
 const totalOperadores =
-    document.getElementById("totalOperadores");
+    elemento("totalOperadores");
 
 const pesquisaUsuarios =
-    document.getElementById("pesquisaUsuarios");
+    elemento("pesquisaUsuarios");
 
 const btnAtualizarUsuarios =
-    document.getElementById("btnAtualizarUsuarios");
+    elemento("btnAtualizarUsuarios");
 
 const listaUsuarios =
-    document.getElementById("listaUsuarios");
+    elemento("listaUsuarios");
 
 const semUsuarios =
-    document.getElementById("semUsuarios");
+    elemento("semUsuarios");
 
-// ========================================
+// ==========================================
 // ESTADO DA APLICAÇÃO
-// ========================================
+// ==========================================
 
 let token = null;
 let usuarioLogado = null;
@@ -105,37 +123,29 @@ let usuariosCadastrados = [];
 // O token fica somente na memória.
 // Atualizar a página exige um novo login.
 
-// ========================================
-// CONTROLE DE PERMISSÕES
-// ========================================
+// ==========================================
+// FUNÇÕES AUXILIARES
+// ==========================================
 
 function ehAdministrador() {
-    return (
-        Boolean(token) &&
+    return Boolean(
+        token &&
         usuarioLogado?.perfil === "administrador"
     );
 }
 
-function verificarPermissaoAdministrador() {
-    if (!ehAdministrador()) {
-        mostrarMensagem(
-            "Acesso permitido somente para administradores.",
-            true
-        );
+function definirMensagem(
+    elementoMensagem,
+    texto,
+    erro = false
+) {
+    if (!elementoMensagem) return;
 
-        return false;
-    }
+    elementoMensagem.textContent = texto;
 
-    return true;
-}
-
-// ========================================
-// MENSAGENS
-// ========================================
-
-function definirMensagem(elemento, texto, erro = false) {
-    elemento.textContent = texto;
-    elemento.style.color = erro ? "#f87171" : "#4ade80";
+    elementoMensagem.style.color = erro
+        ? "#f87171"
+        : "#4ade80";
 }
 
 function mostrarMensagem(texto, erro = false) {
@@ -154,28 +164,50 @@ function mostrarMensagemPerfil(texto, erro = false) {
     definirMensagem(mensagemPerfil, texto, erro);
 }
 
-// ========================================
-// CONTROLAR VISIBILIDADE DA INTERFACE
-// ========================================
+function verificarPermissaoAdministrador() {
+    if (!ehAdministrador()) {
+        mostrarMensagem(
+            "Acesso permitido somente para administradores.",
+            true
+        );
+
+        return false;
+    }
+
+    return true;
+}
+
+// ==========================================
+// CONTROLE DA INTERFACE
+// ==========================================
 
 function atualizarInterface() {
     const autenticado = Boolean(token && usuarioLogado);
     const administrador = ehAdministrador();
 
-    areaLogin.style.display =
-        autenticado ? "none" : "block";
+    // LOGIN
 
-    areaUsuario.style.display =
-        autenticado ? "block" : "none";
+    areaLogin.style.display = autenticado
+        ? "none"
+        : "grid";
 
-    conteudoSistema.style.display =
-        autenticado ? "block" : "none";
+    // DASHBOARD
 
-    areaCadastro.style.display =
-        administrador ? "block" : "none";
+    conteudoSistema.style.display = autenticado
+        ? "block"
+        : "none";
 
-    cabecalhoAcoes.style.display =
-        administrador ? "" : "none";
+    // USUÁRIO LOGADO
+
+    areaUsuario.style.display = autenticado
+        ? "flex"
+        : "none";
+
+    // ÁREAS ADMINISTRATIVAS
+
+    areaCadastro.style.display = administrador
+        ? "block"
+        : "none";
 
     areaGerenciamentoUsuarios.style.display =
         administrador ? "block" : "none";
@@ -183,21 +215,35 @@ function atualizarInterface() {
     areaListaUsuarios.style.display =
         administrador ? "block" : "none";
 
+    // MENU ADMINISTRATIVO
+
+    menuAdministrador.style.display =
+        administrador ? "block" : "none";
+
+    // COLUNA DE AÇÕES
+
+    cabecalhoAcoes.style.display =
+        administrador ? "" : "none";
+
+    // DADOS DO USUÁRIO
+
     if (autenticado) {
         nomeUsuario.textContent =
-            usuarioLogado.nome || usuarioLogado.email;
+            usuarioLogado.nome ||
+            usuarioLogado.email;
 
-        perfilUsuario.textContent =
-            administrador ? "Administrador" : "Operador";
+        perfilUsuario.textContent = administrador
+            ? "Administrador"
+            : "Operador";
     } else {
         nomeUsuario.textContent = "";
         perfilUsuario.textContent = "";
     }
 }
 
-// ========================================
+// ==========================================
 // INDICADORES DE EQUIPAMENTOS
-// ========================================
+// ==========================================
 
 function atualizarIndicadores(quantidadeEncontrada) {
     totalEquipamentos.textContent =
@@ -206,13 +252,19 @@ function atualizarIndicadores(quantidadeEncontrada) {
     resultadosPesquisa.textContent =
         quantidadeEncontrada;
 
+    const patrimoniosUnicos = new Set(
+        equipamentosCadastrados.map(
+            (equipamento) => equipamento.patrimonio
+        )
+    );
+
     totalPatrimonios.textContent =
-        equipamentosCadastrados.length;
+        patrimoniosUnicos.size;
 }
 
-// ========================================
+// ==========================================
 // INDICADORES DE USUÁRIOS
-// ========================================
+// ==========================================
 
 function atualizarIndicadoresUsuarios() {
     totalUsuarios.textContent =
@@ -220,18 +272,20 @@ function atualizarIndicadoresUsuarios() {
 
     totalAdministradores.textContent =
         usuariosCadastrados.filter(
-            usuario => usuario.perfil === "administrador"
+            (usuario) =>
+                usuario.perfil === "administrador"
         ).length;
 
     totalOperadores.textContent =
         usuariosCadastrados.filter(
-            usuario => usuario.perfil === "operador"
+            (usuario) =>
+                usuario.perfil === "operador"
         ).length;
 }
 
-// ========================================
-// SAIR DO SISTEMA
-// ========================================
+// ==========================================
+// ENCERRAR SESSÃO
+// ==========================================
 
 function sairDoSistema(aviso = "") {
     token = null;
@@ -255,26 +309,43 @@ function sairDoSistema(aviso = "") {
 
     atualizarIndicadores(0);
     atualizarIndicadoresUsuarios();
+
     atualizarInterface();
 
     mostrarMensagem("");
     mostrarMensagemUsuarios("");
     mostrarMensagemPerfil("");
-    mostrarMensagemLogin(aviso, Boolean(aviso));
+
+    mostrarMensagemLogin(
+        aviso,
+        Boolean(aviso)
+    );
+
+    window.scrollTo({
+        top: 0,
+        behavior: "auto"
+    });
 }
 
-// ========================================
-// REQUISIÇÕES AUTENTICADAS COM JWT
-// ========================================
+// ==========================================
+// REQUISIÇÕES AUTENTICADAS
+// ==========================================
 
-async function requisicaoAutenticada(url, opcoes = {}) {
+async function requisicaoAutenticada(
+    url,
+    opcoes = {}
+) {
     if (!token) {
-        throw new Error("Faça login para continuar.");
+        throw new Error(
+            "Faça login para continuar."
+        );
     }
 
     const tokenDaRequisicao = token;
 
-    const headers = new Headers(opcoes.headers || {});
+    const headers = new Headers(
+        opcoes.headers || {}
+    );
 
     headers.set(
         "Authorization",
@@ -286,6 +357,8 @@ async function requisicaoAutenticada(url, opcoes = {}) {
         headers
     });
 
+    // SESSÃO EXPIRADA OU INVÁLIDA
+
     if (resposta.status === 401) {
         if (token === tokenDaRequisicao) {
             sairDoSistema(
@@ -293,153 +366,218 @@ async function requisicaoAutenticada(url, opcoes = {}) {
             );
         }
 
-        throw new Error("Sessão inválida ou expirada.");
+        throw new Error(
+            "Sessão inválida ou expirada."
+        );
     }
 
     return resposta;
 }
 
-// ========================================
+// ==========================================
 // LOGIN
-// ========================================
+// ==========================================
 
-formLogin.addEventListener("submit", async (evento) => {
-    evento.preventDefault();
+formLogin.addEventListener(
+    "submit",
+    async (evento) => {
+        evento.preventDefault();
 
-    const email = emailLogin.value.trim();
-    const senha = senhaLogin.value;
+        const email = emailLogin.value
+            .trim()
+            .toLowerCase();
 
-    if (!email || !senha) {
+        const senha = senhaLogin.value;
+
+        if (!email || !senha) {
+            mostrarMensagemLogin(
+                "Informe seu e-mail e senha.",
+                true
+            );
+
+            return;
+        }
+
+        btnLogin.disabled = true;
+
         mostrarMensagemLogin(
-            "Informe e-mail e senha.",
-            true
+            "Verificando credenciais..."
         );
-        return;
-    }
 
-    btnLogin.disabled = true;
+        try {
+            const resposta = await fetch(
+                `${API_BASE}/login`,
+                {
+                    method: "POST",
 
-    try {
-        mostrarMensagemLogin("Verificando credenciais...");
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
 
-        const resposta = await fetch(
-            `${API_BASE}/login`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ email, senha })
+                    body: JSON.stringify({
+                        email,
+                        senha
+                    })
+                }
+            );
+
+            const resultado = await resposta.json();
+
+            if (!resposta.ok) {
+                throw new Error(
+                    resultado.error ||
+                    "Não foi possível realizar o login."
+                );
             }
-        );
 
-        const resultado = await resposta.json();
+            if (
+                !resultado.token ||
+                !resultado.usuario
+            ) {
+                throw new Error(
+                    "O servidor não retornou os dados esperados."
+                );
+            }
 
-        if (!resposta.ok) {
-            throw new Error(
-                resultado.error || "Erro ao realizar login."
+            const perfil = resultado.usuario.perfil;
+
+            if (
+                perfil !== "administrador" &&
+                perfil !== "operador"
+            ) {
+                throw new Error(
+                    "Perfil de usuário não reconhecido."
+                );
+            }
+
+            // SALVAR SESSÃO EM MEMÓRIA
+
+            token = resultado.token;
+            usuarioLogado = resultado.usuario;
+
+            senhaLogin.value = "";
+
+            atualizarInterface();
+
+            mostrarMensagemLogin("");
+
+            mostrarMensagem(
+                "Login realizado com sucesso!"
             );
+
+            // CARREGAR EQUIPAMENTOS
+
+            await carregarEquipamentos();
+
+            // ADMINISTRADOR TAMBÉM CARREGA USUÁRIOS
+
+            if (ehAdministrador()) {
+                await carregarUsuarios();
+            }
+
+        } catch (erro) {
+            if (!token) {
+                mostrarMensagemLogin(
+                    erro.message,
+                    true
+                );
+            } else {
+                mostrarMensagem(
+                    erro.message,
+                    true
+                );
+            }
+
+        } finally {
+            btnLogin.disabled = false;
         }
-
-        if (!resultado.token || !resultado.usuario) {
-            throw new Error(
-                "O servidor não retornou os dados esperados."
-            );
-        }
-
-        const perfil = resultado.usuario.perfil;
-
-        if (
-            perfil !== "administrador" &&
-            perfil !== "operador"
-        ) {
-            throw new Error(
-                "Perfil de usuário não reconhecido."
-            );
-        }
-
-        token = resultado.token;
-        usuarioLogado = resultado.usuario;
-
-        senhaLogin.value = "";
-
-        atualizarInterface();
-        mostrarMensagemLogin("");
-        mostrarMensagem("Login realizado com sucesso!");
-
-        await carregarEquipamentos();
-
-        if (ehAdministrador()) {
-            await carregarUsuarios();
-        }
-
-    } catch (erro) {
-        if (!token) {
-            mostrarMensagemLogin(erro.message, true);
-        } else {
-            mostrarMensagem(erro.message, true);
-        }
-    } finally {
-        btnLogin.disabled = false;
     }
-});
+);
 
-// ========================================
+// ==========================================
 // BOTÃO SAIR
-// ========================================
+// ==========================================
 
 btnSair.addEventListener("click", () => {
     sairDoSistema();
 });
 
-// ========================================
+// ==========================================
 // EXIBIR EQUIPAMENTOS
-// ========================================
+// ==========================================
 
 function exibirEquipamentos(equipamentos) {
     listaEquipamentos.replaceChildren();
 
     semResultados.style.display =
-        equipamentos.length === 0 ? "block" : "none";
+        equipamentos.length === 0
+            ? "block"
+            : "none";
 
     const administrador = ehAdministrador();
 
-    equipamentos.forEach(equipamento => {
+    const fragmento = document.createDocumentFragment();
+
+    equipamentos.forEach((equipamento) => {
         const linha = document.createElement("tr");
+
+        // ID
 
         const colunaId = document.createElement("td");
         colunaId.textContent = equipamento.id;
 
+        // NOME
+
         const colunaNome = document.createElement("td");
         colunaNome.textContent = equipamento.nome;
 
-        const colunaPatrimonio = document.createElement("td");
-        colunaPatrimonio.textContent = equipamento.patrimonio;
+        // PATRIMÔNIO
+
+        const colunaPatrimonio =
+            document.createElement("td");
+
+        colunaPatrimonio.textContent =
+            equipamento.patrimonio;
 
         linha.appendChild(colunaId);
         linha.appendChild(colunaNome);
         linha.appendChild(colunaPatrimonio);
 
-        if (administrador) {
-            const colunaAcoes = document.createElement("td");
+        // AÇÕES SOMENTE PARA ADMINISTRADOR
 
-            const botaoEditar = document.createElement("button");
+        if (administrador) {
+            const colunaAcoes =
+                document.createElement("td");
+
+            // EDITAR
+
+            const botaoEditar =
+                document.createElement("button");
+
             botaoEditar.type = "button";
             botaoEditar.textContent = "Editar";
 
-            botaoEditar.addEventListener("click", () => {
-                editarEquipamento(equipamento);
-            });
+            botaoEditar.addEventListener(
+                "click",
+                () => editarEquipamento(equipamento)
+            );
 
-            const botaoExcluir = document.createElement("button");
+            // EXCLUIR
+
+            const botaoExcluir =
+                document.createElement("button");
+
             botaoExcluir.type = "button";
             botaoExcluir.textContent = "Excluir";
-            botaoExcluir.style.marginLeft = "8px";
+
             botaoExcluir.style.background = "#dc2626";
 
-            botaoExcluir.addEventListener("click", () => {
-                excluirEquipamento(equipamento.patrimonio);
-            });
+            botaoExcluir.addEventListener(
+                "click",
+                () => excluirEquipamento(
+                    equipamento.patrimonio
+                )
+            );
 
             colunaAcoes.appendChild(botaoEditar);
             colunaAcoes.appendChild(botaoExcluir);
@@ -447,15 +585,17 @@ function exibirEquipamentos(equipamentos) {
             linha.appendChild(colunaAcoes);
         }
 
-        listaEquipamentos.appendChild(linha);
+        fragmento.appendChild(linha);
     });
+
+    listaEquipamentos.appendChild(fragmento);
 
     atualizarIndicadores(equipamentos.length);
 }
 
-// ========================================
+// ==========================================
 // CARREGAR EQUIPAMENTOS
-// ========================================
+// ==========================================
 
 async function carregarEquipamentos() {
     if (!token) return;
@@ -481,39 +621,63 @@ async function carregarEquipamentos() {
             );
         }
 
-        if (token !== tokenDaConsulta) return;
+        if (token !== tokenDaConsulta) {
+            return;
+        }
 
         equipamentosCadastrados = dados;
+
         filtrarEquipamentos();
 
     } catch (erro) {
         if (token === tokenDaConsulta) {
-            mostrarMensagem(erro.message, true);
+            mostrarMensagem(
+                erro.message,
+                true
+            );
         }
     }
 }
 
-// ========================================
+// ==========================================
 // PESQUISAR EQUIPAMENTOS
-// ========================================
+// ==========================================
 
-function filtrarEquipamentos() {
-    const termo = pesquisa.value.trim().toLowerCase();
+function obterEquipamentosFiltrados() {
+    const termo = pesquisa.value
+        .trim()
+        .toLowerCase();
 
-    const resultado = equipamentosCadastrados.filter(
-        equipamento =>
-            equipamento.nome.toLowerCase().includes(termo) ||
-            equipamento.patrimonio.toLowerCase().includes(termo)
+    return equipamentosCadastrados.filter(
+        (equipamento) => {
+            const nome = equipamento.nome.toLowerCase();
+
+            const patrimonio =
+                equipamento.patrimonio.toLowerCase();
+
+            return (
+                nome.includes(termo) ||
+                patrimonio.includes(termo)
+            );
+        }
     );
-
-    exibirEquipamentos(resultado);
 }
 
-pesquisa.addEventListener("input", filtrarEquipamentos);
+function filtrarEquipamentos() {
+    const filtrados = obterEquipamentosFiltrados();
 
-// ========================================
-// EXPORTAR EQUIPAMENTOS EM CSV
-// ========================================
+    exibirEquipamentos(filtrados);
+}
+
+pesquisa.addEventListener(
+    "input",
+    filtrarEquipamentos
+);
+
+// ==========================================
+// EXPORTAR EQUIPAMENTOS
+// CSV COMPATÍVEL COM EXCEL
+// ==========================================
 
 function exportarExcel() {
     if (!token) {
@@ -521,33 +685,32 @@ function exportarExcel() {
             "Faça login para exportar.",
             true
         );
+
         return;
     }
 
-    const termo = pesquisa.value.trim().toLowerCase();
-
-    const filtrados = equipamentosCadastrados.filter(
-        equipamento =>
-            equipamento.nome.toLowerCase().includes(termo) ||
-            equipamento.patrimonio.toLowerCase().includes(termo)
-    );
+    const filtrados = obterEquipamentosFiltrados();
 
     if (filtrados.length === 0) {
         mostrarMensagem(
             "Não existem equipamentos para exportar.",
             true
         );
+
         return;
     }
 
     const linhas = [
         ["ID", "Equipamento", "Patrimônio"],
-        ...filtrados.map(equipamento => [
+
+        ...filtrados.map((equipamento) => [
             equipamento.id,
             equipamento.nome,
             equipamento.patrimonio
         ])
     ];
+
+    // EVITA FÓRMULAS INDESEJADAS EM PLANILHAS
 
     function valorSeguroCSV(valor) {
         let texto = String(valor ?? "");
@@ -560,30 +723,36 @@ function exportarExcel() {
     }
 
     const conteudo = linhas
-        .map(linha =>
+        .map((linha) =>
             linha.map(valorSeguroCSV).join(";")
         )
         .join("\r\n");
 
     const arquivo = new Blob(
         ["\uFEFF" + conteudo],
-        { type: "text/csv;charset=utf-8;" }
+        {
+            type: "text/csv;charset=utf-8;"
+        }
     );
 
     const url = URL.createObjectURL(arquivo);
+
     const link = document.createElement("a");
 
     link.href = url;
     link.download = "relatorio_equipamentos.csv";
 
     document.body.appendChild(link);
+
     link.click();
     link.remove();
 
-    URL.revokeObjectURL(url);
+    setTimeout(() => {
+        URL.revokeObjectURL(url);
+    }, 1000);
 
     mostrarMensagem(
-        "Relatório exportado com sucesso!"
+        "Relatório CSV exportado com sucesso!"
     );
 }
 
@@ -592,98 +761,145 @@ botaoExportar.addEventListener(
     exportarExcel
 );
 
-// ========================================
+// ==========================================
 // CADASTRAR EQUIPAMENTO
-// ========================================
+// ==========================================
 
-formulario.addEventListener("submit", async (evento) => {
-    evento.preventDefault();
+formulario.addEventListener(
+    "submit",
+    async (evento) => {
+        evento.preventDefault();
 
-    if (!verificarPermissaoAdministrador()) return;
+        if (!verificarPermissaoAdministrador()) {
+            return;
+        }
 
-    const equipamento = {
-        nome: campoNome.value.trim(),
-        patrimonio: campoPatrimonio.value.trim()
-    };
+        const equipamento = {
+            nome: campoNome.value.trim(),
+            patrimonio: campoPatrimonio.value.trim()
+        };
 
-    if (!equipamento.nome || !equipamento.patrimonio) {
-        mostrarMensagem(
-            "Nome e patrimônio são obrigatórios.",
-            true
-        );
-        return;
-    }
-
-    try {
-        const resposta = await requisicaoAutenticada(
-            API_URL,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(equipamento)
-            }
-        );
-
-        const resultado = await resposta.json();
-
-        if (!resposta.ok) {
-            throw new Error(
-                resultado.error ||
-                "Erro ao cadastrar equipamento"
+        if (
+            !equipamento.nome ||
+            !equipamento.patrimonio
+        ) {
+            mostrarMensagem(
+                "Nome e patrimônio são obrigatórios.",
+                true
             );
+
+            return;
         }
 
-        formulario.reset();
-        await carregarEquipamentos();
+        if (
+            equipamento.nome.length > 100 ||
+            equipamento.patrimonio.length > 50
+        ) {
+            mostrarMensagem(
+                "Nome ou patrimônio ultrapassou o limite permitido.",
+                true
+            );
 
-        mostrarMensagem(
-            "Equipamento cadastrado com sucesso!"
+            return;
+        }
+
+        const botaoCadastrar = formulario.querySelector(
+            'button[type="submit"]'
         );
 
-    } catch (erro) {
-        if (token) {
-            mostrarMensagem(erro.message, true);
+        botaoCadastrar.disabled = true;
+
+        try {
+            const resposta = await requisicaoAutenticada(
+                API_URL,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify(equipamento)
+                }
+            );
+
+            const resultado = await resposta.json();
+
+            if (!resposta.ok) {
+                throw new Error(
+                    resultado.error ||
+                    "Erro ao cadastrar equipamento."
+                );
+            }
+
+            formulario.reset();
+
+            await carregarEquipamentos();
+
+            mostrarMensagem(
+                "Equipamento cadastrado com sucesso!"
+            );
+
+        } catch (erro) {
+            if (token) {
+                mostrarMensagem(
+                    erro.message,
+                    true
+                );
+            }
+
+        } finally {
+            botaoCadastrar.disabled = false;
         }
     }
-});
+);
 
-// ========================================
+// ==========================================
 // EDITAR EQUIPAMENTO
-// ========================================
+// ==========================================
 
 async function editarEquipamento(equipamento) {
-    if (!verificarPermissaoAdministrador()) return;
+    if (!verificarPermissaoAdministrador()) {
+        return;
+    }
 
     const novoNome = prompt(
         "Digite o novo nome do equipamento:",
         equipamento.nome
     );
 
-    if (novoNome === null) return;
+    if (novoNome === null) {
+        return;
+    }
+
+    const nomeAtualizado = novoNome.trim();
 
     if (
-        !novoNome.trim() ||
-        novoNome.trim().length > 100
+        !nomeAtualizado ||
+        nomeAtualizado.length > 100
     ) {
         mostrarMensagem(
             "Informe um nome entre 1 e 100 caracteres.",
             true
         );
+
         return;
     }
 
     try {
         const resposta = await requisicaoAutenticada(
-            `${API_URL}/${encodeURIComponent(equipamento.patrimonio)}`,
+            `${API_URL}/${encodeURIComponent(
+                equipamento.patrimonio
+            )}`,
             {
                 method: "PUT",
+
                 headers: {
                     "Content-Type": "application/json"
                 },
+
                 body: JSON.stringify({
-                    nome: novoNome.trim()
+                    nome: nomeAtualizado
                 })
             }
         );
@@ -693,7 +909,7 @@ async function editarEquipamento(equipamento) {
         if (!resposta.ok) {
             throw new Error(
                 resultado.error ||
-                "Erro ao editar equipamento"
+                "Erro ao editar equipamento."
             );
         }
 
@@ -705,23 +921,30 @@ async function editarEquipamento(equipamento) {
 
     } catch (erro) {
         if (token) {
-            mostrarMensagem(erro.message, true);
+            mostrarMensagem(
+                erro.message,
+                true
+            );
         }
     }
 }
 
-// ========================================
+// ==========================================
 // EXCLUIR EQUIPAMENTO
-// ========================================
+// ==========================================
 
 async function excluirEquipamento(patrimonio) {
-    if (!verificarPermissaoAdministrador()) return;
+    if (!verificarPermissaoAdministrador()) {
+        return;
+    }
 
     const confirmar = confirm(
         `Deseja realmente excluir o equipamento ${patrimonio}?`
     );
 
-    if (!confirmar) return;
+    if (!confirmar) {
+        return;
+    }
 
     try {
         const resposta = await requisicaoAutenticada(
@@ -736,7 +959,7 @@ async function excluirEquipamento(patrimonio) {
         if (!resposta.ok) {
             throw new Error(
                 resultado.error ||
-                "Erro ao excluir equipamento"
+                "Erro ao excluir equipamento."
             );
         }
 
@@ -748,22 +971,29 @@ async function excluirEquipamento(patrimonio) {
 
     } catch (erro) {
         if (token) {
-            mostrarMensagem(erro.message, true);
+            mostrarMensagem(
+                erro.message,
+                true
+            );
         }
     }
 }
 
-// ========================================
+// ==========================================
 // EXIBIR USUÁRIOS
-// ========================================
+// ==========================================
 
 function exibirUsuarios(usuarios) {
     listaUsuarios.replaceChildren();
 
     semUsuarios.style.display =
-        usuarios.length === 0 ? "block" : "none";
+        usuarios.length === 0
+            ? "block"
+            : "none";
 
-    usuarios.forEach(usuario => {
+    const fragmento = document.createDocumentFragment();
+
+    usuarios.forEach((usuario) => {
         const linha = document.createElement("tr");
 
         const colunaId = document.createElement("td");
@@ -776,6 +1006,7 @@ function exibirUsuarios(usuarios) {
         colunaEmail.textContent = usuario.email;
 
         const colunaPerfil = document.createElement("td");
+
         colunaPerfil.textContent =
             usuario.perfil === "administrador"
                 ? "Administrador"
@@ -794,16 +1025,19 @@ function exibirUsuarios(usuarios) {
             colunaData.textContent = "-";
         }
 
-        // NOVA COLUNA DE AÇÕES
+        // BOTÃO DE ALTERAR PERFIL
+
         const colunaAcoes = document.createElement("td");
 
         const botaoAlterar = document.createElement("button");
+
         botaoAlterar.type = "button";
         botaoAlterar.textContent = "Alterar perfil";
 
-        botaoAlterar.addEventListener("click", () => {
-            alterarPerfilUsuario(usuario);
-        });
+        botaoAlterar.addEventListener(
+            "click",
+            () => alterarPerfilUsuario(usuario)
+        );
 
         colunaAcoes.appendChild(botaoAlterar);
 
@@ -814,25 +1048,35 @@ function exibirUsuarios(usuarios) {
         linha.appendChild(colunaData);
         linha.appendChild(colunaAcoes);
 
-        listaUsuarios.appendChild(linha);
+        fragmento.appendChild(linha);
     });
+
+    listaUsuarios.appendChild(fragmento);
 }
 
-// ========================================
+// ==========================================
 // PESQUISAR USUÁRIOS
-// ========================================
+// ==========================================
 
 function filtrarUsuarios() {
-    if (!ehAdministrador()) return;
+    if (!ehAdministrador()) {
+        return;
+    }
 
     const termo = pesquisaUsuarios.value
         .trim()
         .toLowerCase();
 
     const filtrados = usuariosCadastrados.filter(
-        usuario =>
-            usuario.nome.toLowerCase().includes(termo) ||
-            usuario.email.toLowerCase().includes(termo)
+        (usuario) => {
+            const nome = usuario.nome.toLowerCase();
+            const email = usuario.email.toLowerCase();
+
+            return (
+                nome.includes(termo) ||
+                email.includes(termo)
+            );
+        }
     );
 
     exibirUsuarios(filtrados);
@@ -843,12 +1087,14 @@ pesquisaUsuarios.addEventListener(
     filtrarUsuarios
 );
 
-// ========================================
+// ==========================================
 // CARREGAR USUÁRIOS
-// ========================================
+// ==========================================
 
 async function carregarUsuarios() {
-    if (!ehAdministrador()) return;
+    if (!ehAdministrador()) {
+        return;
+    }
 
     const tokenDaConsulta = token;
 
@@ -882,18 +1128,22 @@ async function carregarUsuarios() {
         usuariosCadastrados = resultado;
 
         atualizarIndicadoresUsuarios();
+
         filtrarUsuarios();
 
     } catch (erro) {
         if (token === tokenDaConsulta) {
-            mostrarMensagemUsuarios(erro.message, true);
+            mostrarMensagemUsuarios(
+                erro.message,
+                true
+            );
         }
     }
 }
 
-// ========================================
+// ==========================================
 // CADASTRAR NOVO USUÁRIO
-// ========================================
+// ==========================================
 
 formNovoUsuario.addEventListener(
     "submit",
@@ -905,13 +1155,16 @@ formNovoUsuario.addEventListener(
                 "Apenas administradores podem cadastrar usuários.",
                 true
             );
+
             return;
         }
 
         const nome = nomeNovoUsuario.value.trim();
+
         const email = emailNovoUsuario.value
             .trim()
             .toLowerCase();
+
         const senha = senhaNovoUsuario.value;
 
         if (!nome || !email || !senha) {
@@ -919,14 +1172,19 @@ formNovoUsuario.addEventListener(
                 "Preencha nome, e-mail e senha.",
                 true
             );
+
             return;
         }
 
-        if (nome.length > 100 || email.length > 150) {
+        if (
+            nome.length > 100 ||
+            email.length > 150
+        ) {
             mostrarMensagemUsuarios(
                 "Nome ou e-mail ultrapassou o limite permitido.",
                 true
             );
+
             return;
         }
 
@@ -938,23 +1196,26 @@ formNovoUsuario.addEventListener(
                 "A senha deve ter no mínimo 8 caracteres e no máximo 72 bytes.",
                 true
             );
+
             return;
         }
 
         btnCadastrarUsuario.disabled = true;
 
-        try {
-            mostrarMensagemUsuarios(
-                "Cadastrando usuário..."
-            );
+        mostrarMensagemUsuarios(
+            "Cadastrando usuário..."
+        );
 
+        try {
             const resposta = await requisicaoAutenticada(
                 USUARIOS_URL,
                 {
                     method: "POST",
+
                     headers: {
                         "Content-Type": "application/json"
                     },
+
                     body: JSON.stringify({
                         nome,
                         email,
@@ -987,15 +1248,16 @@ formNovoUsuario.addEventListener(
                     true
                 );
             }
+
         } finally {
             btnCadastrarUsuario.disabled = false;
         }
     }
 );
 
-// ========================================
-// NOVA FUNÇÃO - ALTERAR PERFIL
-// ========================================
+// ==========================================
+// ALTERAR PERFIL DE USUÁRIO
+// ==========================================
 
 async function alterarPerfilUsuario(usuario) {
     if (!ehAdministrador()) {
@@ -1003,6 +1265,7 @@ async function alterarPerfilUsuario(usuario) {
             "Apenas administradores podem alterar perfis.",
             true
         );
+
         return;
     }
 
@@ -1019,21 +1282,29 @@ async function alterarPerfilUsuario(usuario) {
             : "OPERADOR";
 
     const confirmar = confirm(
-        `Deseja alterar o perfil do usuário "${usuario.nome}" para ${nomePerfil}?`
+        `Deseja alterar o perfil de "${usuario.nome}" para ${nomePerfil}?`
     );
 
-    if (!confirmar) return;
+    if (!confirmar) {
+        return;
+    }
 
-    mostrarMensagemPerfil("Atualizando perfil...");
+    mostrarMensagemPerfil(
+        "Atualizando perfil..."
+    );
 
     try {
         const resposta = await requisicaoAutenticada(
-            `${USUARIOS_URL}/${encodeURIComponent(usuario.id)}/perfil`,
+            `${USUARIOS_URL}/${encodeURIComponent(
+                usuario.id
+            )}/perfil`,
             {
                 method: "PATCH",
+
                 headers: {
                     "Content-Type": "application/json"
                 },
+
                 body: JSON.stringify({
                     perfil: novoPerfil
                 })
@@ -1049,24 +1320,34 @@ async function alterarPerfilUsuario(usuario) {
             );
         }
 
-        // Se o administrador alterar o próprio perfil,
-        // atualizamos a sessão visualmente.
+        // CASO O ADMINISTRADOR ALTERE
+        // O PRÓPRIO PERFIL
+
         if (
             Number(usuario.id) ===
             Number(usuarioLogado?.id)
         ) {
-            usuarioLogado.perfil = resultado.usuario.perfil;
+            usuarioLogado.perfil =
+                resultado.usuario.perfil;
 
             atualizarInterface();
 
+            // SE DEIXOU DE SER ADMINISTRADOR
+
             if (!ehAdministrador()) {
                 usuariosCadastrados = [];
+
                 listaUsuarios.replaceChildren();
+
                 atualizarIndicadoresUsuarios();
+
+                // REMOVER BOTÕES ADMINISTRATIVOS
+                // DA TABELA DE EQUIPAMENTOS
+
                 filtrarEquipamentos();
 
                 mostrarMensagem(
-                    "Seu perfil foi alterado. Suas permissões foram atualizadas."
+                    "Seu perfil foi atualizado. Suas permissões foram alteradas."
                 );
 
                 return;
@@ -1080,32 +1361,62 @@ async function alterarPerfilUsuario(usuario) {
         );
 
     } catch (erro) {
-        if (!token) return;
+        if (!token) {
+            return;
+        }
 
-        mostrarMensagemPerfil(erro.message, true);
+        mostrarMensagemPerfil(
+            erro.message,
+            true
+        );
 
-        // Se houver conflito, atualizar os dados da tabela.
         await carregarUsuarios();
     }
 }
 
-// ========================================
+// ==========================================
 // ATUALIZAR LISTA DE USUÁRIOS
-// ========================================
+// ==========================================
 
 btnAtualizarUsuarios.addEventListener(
     "click",
     async () => {
-        if (!ehAdministrador()) return;
+        if (!ehAdministrador()) {
+            return;
+        }
 
         await carregarUsuarios();
     }
 );
 
-// ========================================
+// ==========================================
+// MENU LATERAL
+// ==========================================
+
+const linksMenu = document.querySelectorAll(
+    ".menu-link"
+);
+
+linksMenu.forEach((link) => {
+    link.addEventListener("click", () => {
+        linksMenu.forEach((item) => {
+            item.classList.remove("ativo");
+        });
+
+        link.classList.add("ativo");
+    });
+});
+
+// ==========================================
 // INICIAR APLICAÇÃO
-// ========================================
+// ==========================================
 
 atualizarIndicadores(0);
+
 atualizarIndicadoresUsuarios();
+
 atualizarInterface();
+
+console.log(
+    "Gestor Equipamentos: interface inicializada."
+);
