@@ -787,6 +787,14 @@ app.use((erro, req, res, next) => {
 // INICIAR SERVIDOR
 // ========================================
 
-app.listen(3000, () => {
-    console.log("Servidor rodando na porta 3000");
-});
+// Inicia a porta 3000 somente quando
+// executamos diretamente: node server.js
+
+if (require.main === module) {
+    app.listen(3000, () => {
+        console.log("Servidor rodando na porta 3000");
+    });
+}
+
+// Permite utilizar o Express nos testes
+module.exports = app;
