@@ -1,6 +1,8 @@
 
 const test = require("node:test");
 const assert = require("node:assert/strict");
+const jwt = require("jsonwebtoken");
+const pool = require("../database");
 
 const app = require("../server");
 
@@ -141,5 +143,61 @@ test("A rota /perfil rejeita token JWT inválido", async (t) => {
     assert.equal(
         dados.error,
         "Token inválido ou expirado"
+    );
+});
+// ========================================
+// TESTE 5 - PERMISSAO DE OPERADOR
+// ========================================
+
+test("Operador nao pode excluir equipamentos", async (t) => {
+
+    // Simula um usuario operador no banco de dados
+    t.mock.method(pool, "query", async () => ({
+        rows: [{ perfil: "operador" }]
+    }));
+
+    // Inicia um servidor temporario
+    const servidor = app.listen(0, "127.0.0.1");
+
+    t.after(() => new Promise((resolve, reject) => {
+        servidor.close((erro) => {
+            if (erro) reject(erro);
+            else resolve();
+        });
+    }));
+
+    await new Promise((resolve, reject) => {
+        servidor.once("listening", resolve);
+        servidor.once("error", reject);
+    });
+
+    const porta = servidor.address().port;
+
+    // Cria um token JWT valido para o teste
+    const token = jwt.sign(
+        { id: 999 },
+        process.env.JWT_SECRET,
+        { algorithm: "HS256" }
+    );
+
+    // Operador tenta excluir um equipamento
+    const resposta = await fetch(
+        `http://127.0.0.1:${porta}/equipamentos/TESTE001`,
+        {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
+
+    // Confirma que o acesso foi negado
+    assert.equal(resposta.status, 403);
+
+    const dados = await resposta.json();
+
+    assert.equal(
+        dados.error,
+        "Acesso permitido somente para administradores"
     );
 });
