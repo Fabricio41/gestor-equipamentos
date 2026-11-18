@@ -201,3 +201,78 @@ test("Operador nao pode excluir equipamentos", async (t) => {
         "Acesso permitido somente para administradores"
     );
 });
+
+
+test("Administrador pode excluir equipamentos", async (t) => {
+    // Simula as respostas do PostgreSQL
+    t.mock.method(pool, "query", async (sql) => {
+        // Verifica o perfil do usuário
+        if (/SELECT\s+perfil\s+FROM\s+usuarios/i.test(sql)) {
+            return {
+                rows: [{ perfil: "administrador" }]
+            };
+        }
+
+        // Simula a exclusão do equipamento
+        if (/DELETE\s+FROM\s+equipamentos/i.test(sql)) {
+            return {
+                rows: [{
+                    id: 1,
+                    nome: "Trator Teste",
+                    patrimonio: "TESTE001"
+                }]
+            };
+        }
+
+        throw new Error("Consulta SQL inesperada no teste");
+    });
+
+   
+    // Aguarda o servidor iniciar completamente
+    const servidor = await new Promise((resolve, reject) => {
+        const s = app.listen(0, "127.0.0.1", () => {
+            resolve(s);
+        });
+
+        s.once("error", reject);
+    });
+
+    // Encerra o servidor depois do teste
+    t.after(() => servidor.close());
+
+    // Obtém a porta após a inicialização
+    const porta = servidor.address().port;
+
+    // Cria um token JWT válido para o administrador
+    const token = jwt.sign(
+        { id: 999 },
+        process.env.JWT_SECRET,
+        { algorithm: "HS256" }
+    );
+
+    // Administrador tenta excluir o equipamento
+    const resposta = await fetch(
+        `http://127.0.0.1:${porta}/equipamentos/TESTE001`,
+        {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
+
+    // Confirma que a exclusão foi permitida
+    assert.equal(resposta.status, 200);
+
+    const dados = await resposta.json();
+
+    assert.equal(
+        dados.mensagem,
+        "Equipamento excluído com sucesso"
+    );
+
+    assert.equal(
+        dados.equipamento.patrimonio,
+        "TESTE001"
+    );
+});
